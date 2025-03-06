@@ -36,38 +36,38 @@ def test_find_largest_file_invalid_directory():
         find_largest_file('/nonexistent/path')
 
 def test_find_largest_file_nested():
-    """Test finding the largest file in a directory does not search subdirectories."""
+    """Test finding the largest file in a directory with subdirectories."""
     with tempfile.TemporaryDirectory() as tmpdir:
         # Create main directory and subdirectories
         os.makedirs(os.path.join(tmpdir, 'subdir1'))
         os.makedirs(os.path.join(tmpdir, 'subdir2'))
         
-        # Create files of different sizes in different locations
+        # Create files of different sizes in the root directory
         with open(os.path.join(tmpdir, 'small.txt'), 'w') as f:
             f.write('small file')
         
+        # A file in a subdirectory should be ignored
         with open(os.path.join(tmpdir, 'subdir1', 'medium.txt'), 'w') as f:
             f.write('medium file' * 10)
         
-        # Expect None as no files are in root of directory
+        # Expect the small.txt to be the largest (and only file) in root
         largest_file = find_largest_file(tmpdir)
-        assert largest_file is None
+        assert largest_file.endswith('small.txt')
 
 def test_find_largest_file_permissions(monkeypatch):
     """Test handling of files with different permission levels."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        # Create a file with large size but unreadable
-        with open(os.path.join(tmpdir, 'protected.txt'), 'w') as f:
-            f.write('large inaccessible file' * 1000)
-        os.chmod(os.path.join(tmpdir, 'protected.txt'), 0o000)
-        
-        # Create a smaller, accessible file
+        # Create a file that is readable and unreadable with different sizes
         with open(os.path.join(tmpdir, 'normal.txt'), 'w') as f:
             f.write('normal file' * 10)
         
+        with open(os.path.join(tmpdir, 'protected.txt'), 'w') as f:
+            f.write('large unreadable file' * 1000)
+        os.chmod(os.path.join(tmpdir, 'protected.txt'), 0o000)
+        
         try:
             largest_file = find_largest_file(tmpdir)
-            assert largest_file is None
+            assert largest_file.endswith('normal.txt')
         finally:
             # Restore permissions for cleanup
             os.chmod(os.path.join(tmpdir, 'protected.txt'), 0o666)
