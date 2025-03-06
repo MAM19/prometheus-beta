@@ -43,11 +43,11 @@ def find_largest_file(directory):
                     # Try to open the file to ensure it's actually readable
                     try:
                         with open(entry, 'rb') as f:
-                            # Only process readable files
-                            f.read(1)
+                            # Read entire file to verify complete readability
+                            f.read()
                             
-                            # Update largest file if size is larger
-                            if file_size > largest_size:
+                            # Update largest file if size is larger and can be fully read
+                            if file_size > largest_size and (largest_file is None or file_size > largest_size):
                                 largest_file = str(entry.absolute())
                                 largest_size = file_size
                     except (PermissionError, OSError):
