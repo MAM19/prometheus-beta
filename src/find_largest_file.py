@@ -35,13 +35,21 @@ def find_largest_file(directory):
 
     try:
         for entry in dir_path.iterdir():
-            # Skip directories, only consider files
+            # Only consider direct files in the directory, not subdirectories
             if entry.is_file():
                 try:
                     file_size = entry.stat().st_size
                     if file_size > largest_size:
-                        largest_file = str(entry.absolute())
-                        largest_size = file_size
+                        # Check if file is accessible
+                        try:
+                            # Try to open (read) the file
+                            with open(entry, 'r'):
+                                pass
+                            largest_file = str(entry.absolute())
+                            largest_size = file_size
+                        except (PermissionError, OSError):
+                            # Skip inaccessible files
+                            continue
                 except (PermissionError, OSError):
                     # Skip files that can't be accessed
                     continue
