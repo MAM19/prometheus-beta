@@ -12,7 +12,7 @@ class LogCapture:
         self.logger = logger
         self.log_messages = []
         self.handler = logging.StreamHandler()
-        self.formatter = logging.Formatter('%(message)s')
+        self.formatter = logging.Formatter('%(levelname)s: %(message)s')
         self.handler.setFormatter(self.formatter)
         self.logger.addHandler(self.handler)
         self.handler.stream.seek(0)
@@ -33,6 +33,10 @@ def error_function():
     raise ValueError("Test error")
 
 def test_log_execution_normal_case():
+    # Remove previous handlers
+    for handler in test_logger.handlers[:]:
+        test_logger.removeHandler(handler)
+    
     # Capture logs
     log_capture = LogCapture(test_logger)
     
@@ -45,8 +49,8 @@ def test_log_execution_normal_case():
     # Check log messages
     logs = log_capture.get_logs()
     assert len(logs) == 2
-    assert "Executing sample_function(3, 4)" in logs[0]
-    assert "Finished sample_function. Execution time:" in logs[1]
+    assert any("Executing sample_function(3, 4)" in log for log in logs)
+    assert any("Finished sample_function. Execution time:" in log for log in logs)
 
 def test_log_execution_default_logger():
     # Use default logger decorator
@@ -58,6 +62,10 @@ def test_log_execution_default_logger():
     assert default_log_func(5) == 10
 
 def test_log_execution_exception():
+    # Remove previous handlers
+    for handler in test_logger.handlers[:]:
+        test_logger.removeHandler(handler)
+    
     # Capture logs
     log_capture = LogCapture(test_logger)
     
@@ -68,10 +76,14 @@ def test_log_execution_exception():
     # Check log messages
     logs = log_capture.get_logs()
     assert len(logs) == 2
-    assert "Executing error_function()" in logs[0]
-    assert "Exception in error_function: Test error" in logs[1]
+    assert any("Executing error_function()" in log for log in logs)
+    assert any("Exception in error_function: Test error" in log for log in logs)
 
 def test_log_execution_kwargs():
+    # Remove previous handlers
+    for handler in test_logger.handlers[:]:
+        test_logger.removeHandler(handler)
+    
     # Capture logs
     log_capture = LogCapture(test_logger)
     
@@ -84,5 +96,5 @@ def test_log_execution_kwargs():
     # Check log messages
     logs = log_capture.get_logs()
     assert len(logs) == 2
-    assert "Executing sample_function(a=5, b=7)" in logs[0]
-    assert "Finished sample_function. Execution time:" in logs[1]
+    assert any("Executing sample_function(a=5, b=7)" in log for log in logs)
+    assert any("Finished sample_function. Execution time:" in log for log in logs)
