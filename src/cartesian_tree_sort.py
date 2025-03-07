@@ -54,13 +54,16 @@ def build_cartesian_tree(arr: List[T]) -> Optional[CartesianTreeNode]:
         
         # Find the last node that should be the parent of current node
         while stack and stack[-1].value > val:
-            stack.pop()
+            last = stack.pop()
         
         # If stack is empty, this is the root
         if not stack:
             root = node
         else:
             # Add as right child of the last node with smaller value
+            if stack[-1].right:
+                # If right child exists, make it the left child of new node
+                node.left = stack[-1].right
             stack[-1].right = node
         
         stack.append(node)
