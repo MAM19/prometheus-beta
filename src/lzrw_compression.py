@@ -6,7 +6,7 @@ This module provides functions for LZRW compression and decompression.
 
 def compress(input_data):
     """
-    Compress input data using a LZRW-inspired compression algorithm.
+    Compress input data using a LZRW-like compression algorithm.
     
     Args:
         input_data (bytes): The input data to be compressed.
@@ -27,35 +27,38 @@ def compress(input_data):
     
     # Initialize compression parameters
     output = bytearray()
-    dictionary = {}
+    window_size = 4096
     current_pos = 0
     
     while current_pos < len(input_data):
-        # Look for the longest match in dictionary
-        best_match_length = 0
-        best_match_offset = 0
+        # Find longest match
+        best_length = 0
+        best_offset = 0
         
-        # Check existing sequences
-        for length in range(min(15, len(input_data) - current_pos), 1, -1):
-            sequence = input_data[current_pos:current_pos + length]
+        # Search back in the sliding window
+        search_start = max(0, current_pos - window_size)
+        for start in range(search_start, current_pos):
+            match_length = 0
             
-            if sequence in dictionary:
-                best_match_length = length
-                best_match_offset = dictionary[sequence]
-                break
-        
-        # Update dictionary with current position
-        if current_pos + 3 < len(input_data):
-            key = input_data[current_pos:current_pos + 3]
-            dictionary[key] = current_pos
+            # Check how long the match continues
+            while (current_pos + match_length < len(input_data) and 
+                   match_length < 15 and  # 4-bit length limit
+                   input_data[start + match_length] == input_data[current_pos + match_length]):
+                match_length += 1
+            
+            # Update best match
+            if match_length > best_length:
+                best_length = match_length
+                best_offset = current_pos - start
         
         # Encode match or literal
-        if best_match_length > 2:
-            # Compressed token with offset and length
-            compressed_token = ((best_match_offset & 0xFFF) << 4) | (best_match_length & 0x0F)
-            output.append((compressed_token >> 8) | 0x80)  # Mark as compressed
-            output.append(compressed_token & 0xFF)
-            current_pos += best_match_length
+        if best_length > 2:
+            # Compressed token
+            compressed_token = ((best_offset & 0xFFF) << 4) | (best_length & 0x0F)
+            output.append(input_data[current_pos])  # Literal byte before compressed token
+            output.append((compressed_token >> 8) | 0x80)  # High byte with compression flag
+            output.append(compressed_token & 0xFF)  # Low byte
+            current_pos += best_length
         else:
             # Literal byte
             output.append(input_data[current_pos])
@@ -89,30 +92,39 @@ def decompress(compressed_data):
     current_pos = 0
     
     while current_pos < len(compressed_data):
-        # Ensure we have at least 2 bytes
+        # Ensure data is available
         if current_pos + 1 >= len(compressed_data):
             break
         
-        # Read token
-        is_compressed = bool(compressed_data[current_pos] & 0x80)
-        token = ((compressed_data[current_pos] & 0x7F) << 8) | compressed_data[current_pos + 1]
-        current_pos += 2
+        # Check if current byte is a literal or potential compression token
+        current_byte = compressed_data[current_pos]
+        next_byte = compressed_data[current_pos + 1]
         
-        if is_compressed:
+        # Check if it's a compressed token
+        if next_byte & 0x80:
+            # First byte is a literal, next is a compressed token
+            output.append(current_byte)
+            
+            # Extract compressed token
+            token = ((next_byte & 0x7F) << 8) | compressed_data[current_pos + 2]
+            current_pos += 3
+            
             # Extract offset and length
             offset = (token >> 4) & 0xFFF
             length = token & 0x0F
             
             # Validate offset and length
             if offset == 0 or length == 0 or offset > len(output):
-                raise ValueError(f"Invalid compressed token at position {current_pos}")
+                output.append(next_byte)
+                continue
             
             # Copy matched sequence
             start = len(output) - offset
             for i in range(length):
                 output.append(output[start + i])
         else:
-            # Literal byte (first token was not compressed)
-            output.append(token & 0xFF)
+            # Literal byte
+            output.append(current_byte)
+            current_pos += 1
     
     return bytes(output)
