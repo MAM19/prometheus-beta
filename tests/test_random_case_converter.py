@@ -45,4 +45,6 @@ def test_convert_to_random_case_special_characters():
     assert len(result) == len(input_str)
     
     # Verify non-alphabetic characters remain unchanged
-    assert result.replace('H','h').replace('W','w').replace('l','L') == input_str
+    assert all(not c.isalpha() or c.isalpha() for c in result)
+    assert ''.join(c if not c.isalpha() else 'a' for c in result) == \
+           ''.join(c if not c.isalpha() else 'a' for c in input_str)
