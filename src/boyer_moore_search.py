@@ -90,8 +90,8 @@ def boyer_moore_search(text, pattern):
         if j < 0:
             results.append(s)
             
-            # Shift pattern using good suffix or bad character rule
-            s += (m - good_suffix[0] if s + m < n else 1)
+            # Shift to find next occurrence if possible
+            s += max(1, m - good_suffix[0])
         else:
             # Get the bad character index or -1 if not found
             bad_char_shift = bad_char.get(text[s + j], -1)
