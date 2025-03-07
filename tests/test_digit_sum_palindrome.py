@@ -6,7 +6,7 @@ def test_digit_sum_palindrome_basic_cases():
     # Expect True for digit sums that are palindromes
     assert is_digit_sum_palindrome(56) == True   # 5+6 = 11 (palindrome)
     assert is_digit_sum_palindrome(11) == True   # 1+1 = 2 (palindrome)
-    assert is_digit_sum_palindrome(99) == True   # 9+9 = 18 (not a palindrome)
+    assert is_digit_sum_palindrome(99) == False  # 9+9 = 18 (not a palindrome)
 
 def test_digit_sum_palindrome_false_cases():
     """Test cases that should return False."""
@@ -20,8 +20,8 @@ def test_digit_sum_palindrome_edge_cases():
     assert is_digit_sum_palindrome(5) == True   # 5 is a palindrome
     
     # Multi-digit numbers with special sum conditions
-    assert is_digit_sum_palindrome(19) == True  # 1+9 = 10
-    assert is_digit_sum_palindrome(28) == False # 2+8 = 10
+    assert is_digit_sum_palindrome(19) == False  # 1+9 = 10 (not a palindrome)
+    assert is_digit_sum_palindrome(28) == False # 2+8 = 10 (not a palindrome)
 
 def test_digit_sum_palindrome_error_handling():
     """Test error handling for invalid inputs."""
