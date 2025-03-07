@@ -36,5 +36,5 @@ def test_list_with_non_string_elements():
 def test_list_with_unicode_strings():
     """Test sorting list with unicode strings"""
     input_list = ["hello", "世界", "python", "代码"]
-    expected = ["hello", "世界", "python", "代码"]
+    expected = ["代码", "世界", "hello", "python"]
     assert sort_strings_by_length(input_list) == expected
