@@ -26,9 +26,9 @@ def build_cartesian_tree(arr: List[T]) -> Optional[CartesianTreeNode]:
     """
     Build a Cartesian Tree from a given array.
     
-    A Cartesian Tree is a binary tree derived from an array where:
+    A Cartesian Tree is a binary tree where:
     1. The tree is a min-heap based on the input array values
-    2. In-order traversal of the tree gives the original array
+    2. Performs an in-order traversal of the tree to get sorted elements
     
     Args:
         arr: Input list to build the Cartesian Tree from
@@ -45,30 +45,38 @@ def build_cartesian_tree(arr: List[T]) -> Optional[CartesianTreeNode]:
     if not arr:
         return None
     
-    # Stack to help build the Cartesian Tree
-    stack = []
+    nodes = [CartesianTreeNode(val) for val in arr]
     
-    for val in arr:
-        # Create a new node
-        node = CartesianTreeNode(val)
+    for i in range(1, len(nodes)):
+        current = nodes[i]
+        parent = None
+        j = i - 1
         
-        # Find the last node that should be the parent of current node
-        while stack and stack[-1].value > val:
-            last = stack.pop()
+        # Find the nearest smaller element 
+        while j >= 0:
+            if nodes[j].value <= current.value:
+                parent = nodes[j]
+                break
+            j -= 1
         
-        # If stack is empty, this is the root
-        if not stack:
-            root = node
+        # If no smaller parent found, current becomes root
+        if parent is None:
+            if nodes[0].right is None:
+                nodes[0].right = current
+            else:
+                # If right is already occupied, set as left child
+                current.left = nodes[0].right
+                nodes[0].right = current
         else:
-            # Add as right child of the last node with smaller value
-            if stack[-1].right:
-                # If right child exists, make it the left child of new node
-                node.left = stack[-1].right
-            stack[-1].right = node
-        
-        stack.append(node)
+            # Connect current node to its parent
+            if parent.right is None:
+                parent.right = current
+            else:
+                # If right is already occupied, set as left child
+                current.left = parent.right
+                parent.right = current
     
-    return root
+    return nodes[0]
 
 def cartesian_tree_sort(arr: List[T]) -> List[T]:
     """
