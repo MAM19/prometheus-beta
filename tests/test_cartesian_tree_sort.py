@@ -2,6 +2,21 @@ import pytest
 import random
 from src.cartesian_tree_sort import cartesian_tree_sort, build_cartesian_tree, CartesianTreeNode
 
+def _collect_tree_elements(root):
+    """Helper function to collect all elements from a Cartesian Tree"""
+    elements = []
+    
+    def in_order_collect(node):
+        if node is None:
+            return
+        
+        in_order_collect(node.left)
+        elements.append(node.value)
+        in_order_collect(node.right)
+    
+    in_order_collect(root)
+    return elements
+
 def test_empty_list_sorting():
     """Test sorting an empty list"""
     assert cartesian_tree_sort([]) == []
