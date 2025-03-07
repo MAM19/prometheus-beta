@@ -11,7 +11,7 @@ def test_digit_sum_palindrome_basic_cases():
 def test_digit_sum_palindrome_false_cases():
     """Test cases that should return False."""
     assert is_digit_sum_palindrome(98) == False  # 9+8 = 17 (not a palindrome)
-    assert is_digit_sum_palindrome(23) == False  # 2+3 = 5 (not a palindrome)
+    assert is_digit_sum_palindrome(23) == True   # 2+3 = 5 (single digit is palindrome)
 
 def test_digit_sum_palindrome_edge_cases():
     """Test edge cases and boundary conditions."""
