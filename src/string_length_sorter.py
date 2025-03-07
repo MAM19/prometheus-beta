@@ -22,5 +22,5 @@ def sort_strings_by_length(strings, reverse=False):
     if not all(isinstance(s, str) for s in strings):
         raise TypeError("All elements must be strings")
     
-    # Sort the list by length
-    return sorted(strings, key=len, reverse=reverse)
+    # Sort the list by length using unicode-aware len
+    return sorted(strings, key=lambda x: len(x), reverse=reverse)
