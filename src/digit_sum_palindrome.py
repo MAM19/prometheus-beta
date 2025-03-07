@@ -29,4 +29,4 @@ def is_digit_sum_palindrome(n: int) -> bool:
     
     # Convert sum to string and check if it's a palindrome
     str_sum = str(digit_sum)
-    return len(str_sum) == 1 or str_sum == str_sum[::-1]
+    return (len(str_sum) == 1) or (str_sum == str_sum[::-1] and len(str_sum) > 1)
