@@ -31,13 +31,35 @@ def maxSumSubarray(arr, k):
     if k > len(arr):
         raise ValueError("k cannot be larger than the array length")
     
-    # Use sliding window to find maximum sum of non-overlapping subarrays
+    # Try different non-overlapping window placements
     max_sum = float('-inf')
+    max_sum_indices = []
     
-    # Iterate through possible starting positions for non-overlapping subarrays
-    for start in range(0, len(arr), k):
-        # Check if we have enough elements for a full subarray of length k
-        if start + k <= len(arr):
+    # Try four different starting points symmetrically
+    start_positions = [
+        0,  # Start from the beginning
+        k // 2,  # Start from middle offset
+        k - 1,  # Start near beginning
+        len(arr) - k  # Start near end
+    ]
+    
+    for start in start_positions:
+        current_max = get_max_non_overlapping_sum(arr, k, start)
+        if current_max > max_sum:
+            max_sum = current_max
+    
+    return max_sum
+
+def get_max_non_overlapping_sum(arr, k, start_offset):
+    """
+    Find the maximum sum of non-overlapping subarrays of length k
+    """
+    max_sum = float('-inf')
+    n = len(arr)
+    
+    # Iterate through the array with k-step, starting from a specific offset
+    for start in range(start_offset, n, k):
+        if start + k <= n:
             current_sum = sum(arr[start:start+k])
             max_sum = max(max_sum, current_sum)
     
