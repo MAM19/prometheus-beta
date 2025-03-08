@@ -19,7 +19,7 @@ def test_sum_of_squares_floats():
 
 def test_sum_of_squares_mixed_numbers():
     """Test with mixed integers and floats"""
-    assert sum_of_squares([1, 2.5, 3]) == 20.25  # 1^2 + 2.5^2 + 3^2 = 1 + 6.25 + 9 = 20.25
+    assert sum_of_squares([1, 2.5, 3]) == 16.25  # 1^2 + 2.5^2 + 3^2 = 1 + 6.25 + 9 = 16.25
 
 def test_sum_of_squares_invalid_input_type():
     """Test that TypeError is raised for non-list input"""
