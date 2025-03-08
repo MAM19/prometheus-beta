@@ -36,3 +36,6 @@ def test_input_constraints():
     
     with pytest.raises(ValueError):
         first_non_repeating_character('abc123')  # Mixed characters
+    
+    with pytest.raises(ValueError):
+        first_non_repeating_character('123')  # Only numbers
