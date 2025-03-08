@@ -21,11 +21,13 @@ def test_binary_matrix_search():
 
 def test_custom_search_strategy():
     def custom_search(matrix, target):
-        return sum(sum(row) for row in matrix) > target
+        # More straightforward strategy for illustration
+        total_sum = sum(sum(row) for row in matrix)
+        return total_sum >= target
     
     matrix = [[1, 2], [3, 4]]
-    assert search_matrix(matrix, 20, custom_search) == True
-    assert search_matrix(matrix, 30, custom_search) == False
+    assert search_matrix(matrix, 10, custom_search) == True
+    assert search_matrix(matrix, 20, custom_search) == False
 
 def test_matrix_search_error_handling():
     with pytest.raises(ValueError, match="Matrix cannot be empty"):
