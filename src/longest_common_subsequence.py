@@ -12,6 +12,9 @@ def lcs_length(str1: str, str2: str) -> int:
     Returns:
         int: Length of the longest common subsequence
     
+    Raises:
+        TypeError: If inputs are not strings
+    
     Examples:
         >>> lcs_length("ABCDGH", "AEDFHR")
         3
@@ -22,6 +25,10 @@ def lcs_length(str1: str, str2: str) -> int:
         >>> lcs_length("TEST", "")
         0
     """
+    # Type checking
+    if not isinstance(str1, str) or not isinstance(str2, str):
+        raise TypeError("Inputs must be strings")
+    
     # Handle edge cases of empty strings
     if not str1 or not str2:
         return 0
