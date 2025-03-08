@@ -17,13 +17,13 @@ def first_non_repeating_character(s: str) -> str | None:
     if not isinstance(s, str):
         raise TypeError("Input must be a string")
     
+    # Empty string is allowed
+    if not s:
+        return None
+    
     # Validate input contains only lowercase letters
     if not s.islower():
         raise ValueError("Input must contain only lowercase letters")
-    
-    # Empty string case
-    if not s:
-        return None
     
     # Count occurrences of each character
     char_count = {}
