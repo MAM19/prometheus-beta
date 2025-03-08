@@ -21,7 +21,7 @@ def test_lcs_no_common_subsequence():
 
 def test_lcs_case_sensitive():
     """Test that LCS is case-sensitive"""
-    assert lcs_length("Abc", "abc") == 0
+    assert lcs_length("Abc", "abc") == 2  # Actual common subsequence: 'bc'
     assert lcs_length("HELLO", "hello") == 0
 
 def test_lcs_partial_matches():
