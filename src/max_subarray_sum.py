@@ -19,17 +19,19 @@ def maxSumSubarray(arr, k):
     if not isinstance(k, int):
         raise TypeError("k must be an integer")
     
+    # Handle edge cases for empty array or k = 0
+    if len(arr) == 0:
+        if k == 0:
+            return 0
+        raise ValueError("Cannot find subarray in empty array")
+    
     if k <= 0:
         raise ValueError("k must be a positive integer")
     
     if k > len(arr):
         raise ValueError("k cannot be larger than the array length")
     
-    # If k is 0 or the array is empty, return 0
-    if k == 0 or len(arr) == 0:
-        return 0
-    
-    # Maximum sum is the maximum of all possible non-overlapping subarrays of length k
+    # Use sliding window to find maximum sum of non-overlapping subarrays
     max_sum = float('-inf')
     
     # Iterate through possible starting positions for non-overlapping subarrays
