@@ -35,7 +35,7 @@ def test_mixed_numbers():
     """Test array with mixed positive and negative numbers"""
     arr = [2, -1, 3, 10, -4, 7, 2, -5]
     k = 3
-    assert max_subarray_sum(arr, k) == 19
+    assert max_subarray_sum(arr, k) == 13  # 3 + 10 + 0 = 13
 
 def test_invalid_k_zero():
     """Test that zero as k raises ValueError"""
