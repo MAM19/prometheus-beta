@@ -35,4 +35,4 @@ def test_input_constraints():
         first_non_repeating_character('ABCDEF')
     
     with pytest.raises(ValueError):
-        first_non_repeating_character('abc123')
+        first_non_repeating_character('abc123')  # Mixed characters
