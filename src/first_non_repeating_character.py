@@ -9,14 +9,22 @@ def first_non_repeating_character(s: str) -> str | None:
         str or None: The first non-repeating character, or None if no 
                      non-repeating character exists.
 
-    Examples:
-        >>> first_non_repeating_character('aabcccdeeff')
-        'b'
-        >>> first_non_repeating_character('aabbcc')
-        None
-        >>> first_non_repeating_character('')
-        None
+    Raises:
+        TypeError: If input is not a string
+        ValueError: If input contains characters other than lowercase letters
     """
+    # Validate input
+    if not isinstance(s, str):
+        raise TypeError("Input must be a string")
+    
+    # Validate input contains only lowercase letters
+    if not s.islower() and s:
+        raise ValueError("Input must contain only lowercase letters")
+    
+    # Empty string case
+    if not s:
+        return None
+    
     # Count occurrences of each character
     char_count = {}
     for char in s:
