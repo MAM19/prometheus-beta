@@ -41,7 +41,7 @@ def lcs_length(str1: str, str2: str) -> int:
     for i in range(1, m + 1):
         for j in range(1, n + 1):
             if str1[i-1] == str2[j-1]:
-                # If characters match, add 1 to the previous diagonal value
+                # If characters match exactly (case-sensitive), add 1 to the previous diagonal value
                 dp[i][j] = dp[i-1][j-1] + 1
             else:
                 # If characters don't match, take the max of left or top cells
