@@ -23,23 +23,24 @@ def find_longest_substring(s: str) -> str:
     if not s:
         return ""
     
-    # Initialize variables to track the longest unique substring
+    # Track potential candidates
     longest_substring = ""
-    start = 0
-    char_index = {}
     
-    for end, char in enumerate(s):
-        # If char is already in current substring, 
-        # move start to just after its last occurrence
-        if char in char_index and char_index[char] >= start:
-            start = char_index[char] + 1
+    # Try all possible starting points
+    for start in range(len(s)):
+        # Find unique substring starting from this point
+        seen = set()
+        curr_substring = ""
         
-        # Update the last seen index of current character
-        char_index[char] = end
+        for char in s[start:]:
+            if char not in seen:
+                seen.add(char)
+                curr_substring += char
+            else:
+                break
         
-        # Check if current substring is longer than longest so far
-        current_substring = s[start:end+1]
-        if len(current_substring) > len(longest_substring):
-            longest_substring = current_substring
+        # Update longest substring if needed
+        if len(curr_substring) > len(longest_substring):
+            longest_substring = curr_substring
     
     return longest_substring
